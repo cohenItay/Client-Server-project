@@ -1,3 +1,6 @@
 /project.iml
 /.idea/
-/out/
+/Server/Server.iml
+/Server/out/
+/Client/Client.iml
+/Client/out/
