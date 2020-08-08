@@ -1,17 +1,15 @@
 package selfeducation.itaycohen.string_search_algorithms.naive.strategies;
 
 import com.sun.istack.internal.NotNull;
-import selfeducation.itaycohen.string_search_algorithms.strategies_contracts.IDirectionalSearchStrategy;
-import selfeducation.itaycohen.string_search_algorithms.strategies_contracts.IStringSearchStrategy;
 
 import java.util.List;
 
-public class ReverseSearch implements IStringSearchStrategy<CharSequence> {
+public class ReversedNaiveSearchStrategy implements INaiveStringSearchStrategy {
 
-    private final IDirectionalSearchStrategy<CharSequence> directionalSearchStrategy;
+    private final INaiveDirectionalSearchStrategy directionalSearchStrategy;
 
-    public ReverseSearch(
-            @NotNull IDirectionalSearchStrategy<CharSequence> directionalSearchStrategy
+    public ReversedNaiveSearchStrategy(
+            @NotNull INaiveDirectionalSearchStrategy directionalSearchStrategy
     ) {
         this.directionalSearchStrategy = directionalSearchStrategy;
     }

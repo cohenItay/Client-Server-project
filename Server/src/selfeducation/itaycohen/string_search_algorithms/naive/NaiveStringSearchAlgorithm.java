@@ -2,25 +2,25 @@ package selfeducation.itaycohen.string_search_algorithms.naive;
 
 import com.sun.istack.internal.NotNull;
 import selfeducation.itaycohen.string_search_algorithms.IStringSearchAlgorithm;
-import selfeducation.itaycohen.string_search_algorithms.strategies_contracts.IStringSearchStrategy;
+import selfeducation.itaycohen.string_search_algorithms.naive.strategies.INaiveStringSearchStrategy;
 
 import java.util.List;
 
 /**
- *  A naive Search algorithm. The algorithm is not desgined to be efficient, only to supply the search outcome.
+ *  A naive Search algorithm. The algorithm is not designed to be efficient, only to supply the search outcome.
  */
-public class NaiveStringSearchAlgorithm<T extends CharSequence> implements IStringSearchAlgorithm<T> {
+public class NaiveStringSearchAlgorithm implements IStringSearchAlgorithm {
 
-    private final IStringSearchStrategy<T> searchStrategy;
+    private final INaiveStringSearchStrategy searchStrategy;
 
     public NaiveStringSearchAlgorithm(
-            @NotNull IStringSearchStrategy<T> searchStrategy
+            @NotNull INaiveStringSearchStrategy searchStrategy
     ) {
         this.searchStrategy = searchStrategy;
     }
 
     @Override
-    public List<Integer> search(T pattern, T text) {
+    public List<Integer> search(CharSequence pattern, CharSequence text) {
         return searchStrategy.search(pattern, text);
     }
 

@@ -1,23 +1,20 @@
 package selfeducation.itaycohen;
 
 import selfeducation.itaycohen.string_search_algorithms.IStringSearchAlgorithm;
-import selfeducation.itaycohen.string_search_algorithms.naive.NaiveStringSearchAlgorithm;
-import selfeducation.itaycohen.string_search_algorithms.naive.strategies.DescendingSearch;
-import selfeducation.itaycohen.string_search_algorithms.naive.strategies.ReverseSearch;
-import selfeducation.itaycohen.string_search_algorithms.strategies_contracts.IDirectionalSearchStrategy;
-import selfeducation.itaycohen.string_search_algorithms.strategies_contracts.IStringSearchStrategy;
+import selfeducation.itaycohen.string_search_algorithms.StringSearchFactory;
 
 import java.util.List;
+
+import static selfeducation.itaycohen.string_search_algorithms.IStringSearchAlgorithm.Factory.*;
 
 public class Main {
 
     public static void main(String[] args) {
 	    String text = "AABAACAADAABAABA";
 	    String pattern = "AABA";
+        IStringSearchAlgorithm.Factory algFactory = new StringSearchFactory();
+        IStringSearchAlgorithm alg = algFactory.create(TYPE_KMP, PROPERTY_ASCENDING);
 
-        IDirectionalSearchStrategy<CharSequence> directionalStrategy = new DescendingSearch<>();
-        IStringSearchStrategy<CharSequence> searchStrategy = new ReverseSearch(directionalStrategy);
-        IStringSearchAlgorithm<CharSequence> alg = new NaiveStringSearchAlgorithm<>(searchStrategy);
         List<Integer> matches = alg.search(pattern, text);
         System.out.println(matches);
     }
