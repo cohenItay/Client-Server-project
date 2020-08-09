@@ -1,10 +1,10 @@
-package selfeducation.itaycohen.string_search_algorithms.naive.strategies;
+package selfeducation.itaycohen.string_search.strategies.naive.internal_strategies;
 
 import com.sun.istack.internal.NotNull;
 
 import java.util.List;
 
-public class ReversedNaiveSearchStrategy implements INaiveStringSearchStrategy {
+public class ReversedNaiveSearchStrategy implements INaiveInternalStrategy {
 
     private final INaiveDirectionalSearchStrategy directionalSearchStrategy;
 

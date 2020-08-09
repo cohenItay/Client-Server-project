@@ -1,13 +1,8 @@
-package selfeducation.itaycohen.string_search_algorithms.naive.strategies;
-
-import selfeducation.itaycohen.string_search_algorithms.IStringSearchAlgorithm;
+package selfeducation.itaycohen.string_search;
 
 import java.util.List;
 
-/**
- * Specify <b>how</b> the search will be executed in the implementing Strategy.
- * */
-public interface INaiveStringSearchStrategy {
+public interface IStringSearchAlgorithm {
 
     /**
      * Search all occurrences of {@code pattern} inside the {@code text}.

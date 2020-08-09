@@ -1,18 +1,18 @@
-package selfeducation.itaycohen.string_search_algorithms.kmp.strategies;
+package selfeducation.itaycohen.string_search.strategies.kmp.internal_strategies;
 
-public class LpsUtilSingleton {
+class LpsUtilSingleton {
 
     private static LpsUtilSingleton instance;
 
     private LpsUtilSingleton() {}
 
-    public static LpsUtilSingleton getInstance() {
+    static LpsUtilSingleton getInstance() {
         if (instance == null)
             instance = new LpsUtilSingleton();
         return instance;
     }
 
-    public int[] createPreProcessedLps(CharSequence pattern) {
+    int[] createPreProcessedLps(CharSequence pattern) {
         int patternLength = pattern.length();
         int[] lps = new int[patternLength];
         int properPrefixAmount = 0;

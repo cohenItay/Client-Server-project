@@ -1,4 +1,4 @@
-package selfeducation.itaycohen.string_search_algorithms.kmp.strategies;
+package selfeducation.itaycohen.string_search.strategies.kmp.internal_strategies;
 
 import java.util.ArrayList;
 import java.util.List;
