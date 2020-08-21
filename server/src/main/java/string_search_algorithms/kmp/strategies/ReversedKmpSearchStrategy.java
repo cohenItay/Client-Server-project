@@ -1,15 +1,16 @@
-package selfeducation.itaycohen.string_search.strategies.naive.internal_strategies;
+package string_search_algorithms.kmp.strategies;
 
 import com.sun.istack.internal.NotNull;
+import string_search_algorithms.naive.strategies.INaiveStringSearchStrategy;
 
 import java.util.List;
 
-public class ReversedNaiveSearchStrategy implements INaiveInternalStrategy {
+public class ReversedKmpSearchStrategy implements IKmpStringSearchStrategy {
 
-    private final INaiveDirectionalSearchStrategy directionalSearchStrategy;
+    private final IKmpDirectionalSearchStrategy directionalSearchStrategy;
 
-    public ReversedNaiveSearchStrategy(
-            @NotNull INaiveDirectionalSearchStrategy directionalSearchStrategy
+    public ReversedKmpSearchStrategy(
+            @NotNull IKmpDirectionalSearchStrategy directionalSearchStrategy
     ) {
         this.directionalSearchStrategy = directionalSearchStrategy;
     }

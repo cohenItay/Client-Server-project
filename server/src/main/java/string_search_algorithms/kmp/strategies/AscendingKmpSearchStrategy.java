@@ -1,4 +1,4 @@
-package selfeducation.itaycohen.string_search.strategies.kmp.internal_strategies;
+package string_search_algorithms.kmp.strategies;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public class AscendingKmpSearchStrategy implements IKmpDirectionalSearchStrategy
         int n = text.length();
         int i = 0;
         int j = 0;
-        int[] lps = LpsUtilSingleton.getInstance().createPreProcessedLps(pattern);
+        int[] lps = createPreProcessedLps(pattern);
 
         while (i < n) {
             if (pattern.charAt(j) == text.charAt(i)) {
@@ -36,5 +36,30 @@ public class AscendingKmpSearchStrategy implements IKmpDirectionalSearchStrategy
             }
         }
         return matches;
+    }
+
+    public int[] createPreProcessedLps(CharSequence pattern) {
+        int patternLength = pattern.length();
+        int[] lps = new int[patternLength];
+        int properPrefixAmount = 0;
+        int i = 1;
+
+        lps[0] = 0;
+        while (i < patternLength) {
+            if (pattern.charAt(i) == pattern.charAt(properPrefixAmount)) {
+                properPrefixAmount++;
+                lps[i] = properPrefixAmount;
+                i++;
+            }
+            else {
+                if (properPrefixAmount != 0) {
+                    properPrefixAmount = lps[properPrefixAmount - 1];
+                } else {
+                    lps[i] = properPrefixAmount;
+                    i++;
+                }
+            }
+        }
+        return lps;
     }
 }

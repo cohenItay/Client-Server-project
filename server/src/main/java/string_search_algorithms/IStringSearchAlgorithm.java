@@ -1,11 +1,11 @@
-package selfeducation.itaycohen.string_search.strategies;
+package string_search_algorithms;
 
 import java.util.List;
 
 /**
  * A contract to the String Search algorithm family.
  */
-public interface IStringSearchStrategy {
+public interface IStringSearchAlgorithm {
 
     /**
      * Search all occurrences of {@code pattern} inside the {@code text}.
@@ -27,11 +27,11 @@ public interface IStringSearchStrategy {
         int TYPE_KMP = 2;
 
         /**
-         * Creates an instance of {@link IStringSearchStrategy}
+         * Creates an instance of {@link IStringSearchAlgorithm}
          * @param algorithmTypeId The identifier of the algorithm.
          * @param algorithmPropertyId The identifier of the algorithm property, meaning how it will work.
-         * @return new instance of {@link IStringSearchStrategy}
+         * @return new instance of {@link IStringSearchAlgorithm}
          */
-         IStringSearchStrategy create(int algorithmTypeId, int algorithmPropertyId);
+         IStringSearchAlgorithm create(int algorithmTypeId, int algorithmPropertyId);
     }
 }

@@ -1,8 +1,13 @@
-package selfeducation.itaycohen.string_search;
+package string_search_algorithms.kmp.strategies;
+
+import string_search_algorithms.IStringSearchAlgorithm;
 
 import java.util.List;
 
-public interface IStringSearchAlgorithm {
+/**
+ * Specify <b>how</b> the search will be executed in the implementing Strategy.
+ * */
+public interface IKmpStringSearchStrategy {
 
     /**
      * Search all occurrences of {@code pattern} inside the {@code text}.
