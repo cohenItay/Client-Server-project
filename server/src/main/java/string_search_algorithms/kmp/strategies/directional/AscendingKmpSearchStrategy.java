@@ -1,14 +1,13 @@
-package string_search_algorithms.kmp.strategies;
+package string_search_algorithms.kmp.strategies.directional;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class DescendingKmpSearchStrategy implements IKmpDirectionalSearchStrategy {
+public class AscendingKmpSearchStrategy implements IKmpInternalDirectionalStrategy {
 
     /**
-     * Search strategy which searches a pattern inside a text, in <b>descending</b> way.
-     * Meaning, the <b>last</b> match found will be in the <b>first</b> {@link List} Node.
+     * Search strategy which searches a pattern inside a text, in <b>ascending</b> way.
+     * Meaning, the <b>first</b> match found will be in the <b>first</b> {@link List} Node.
      */
     @Override
     public List<Integer> search(CharSequence pattern, CharSequence text) {
@@ -36,7 +35,6 @@ public class DescendingKmpSearchStrategy implements IKmpDirectionalSearchStrateg
                     i = i + 1;
             }
         }
-        Collections.reverse(matches);
         return matches;
     }
 

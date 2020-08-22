@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * A contract to the String Search algorithm family.
  */
-public interface IStringSearchAlgorithm {
+public interface IStringSearchAlgoStrategy {
 
     /**
      * Search all occurrences of {@code pattern} inside the {@code text}.
@@ -27,11 +27,11 @@ public interface IStringSearchAlgorithm {
         int TYPE_KMP = 2;
 
         /**
-         * Creates an instance of {@link IStringSearchAlgorithm}
+         * Creates an instance of {@link IStringSearchAlgoStrategy}
          * @param algorithmTypeId The identifier of the algorithm.
          * @param algorithmPropertyId The identifier of the algorithm property, meaning how it will work.
-         * @return new instance of {@link IStringSearchAlgorithm}
+         * @return new instance of {@link IStringSearchAlgoStrategy}
          */
-         IStringSearchAlgorithm create(int algorithmTypeId, int algorithmPropertyId);
+         IStringSearchAlgoStrategy create(int algorithmTypeId, int algorithmPropertyId);
     }
 }

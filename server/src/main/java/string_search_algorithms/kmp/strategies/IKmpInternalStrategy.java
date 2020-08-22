@@ -1,13 +1,11 @@
-package string_search_algorithms.naive.strategies;
-
-import string_search_algorithms.IStringSearchAlgorithm;
+package string_search_algorithms.kmp.strategies;
 
 import java.util.List;
 
 /**
  * Specify <b>how</b> the search will be executed in the implementing Strategy.
  * */
-public interface INaiveStringSearchStrategy {
+public interface IKmpInternalStrategy {
 
     /**
      * Search all occurrences of {@code pattern} inside the {@code text}.

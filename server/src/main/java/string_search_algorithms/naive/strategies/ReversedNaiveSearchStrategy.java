@@ -1,15 +1,16 @@
 package string_search_algorithms.naive.strategies;
 
 import com.sun.istack.internal.NotNull;
+import string_search_algorithms.naive.strategies.directional.INaiveInternalDirectionalStrategy;
 
 import java.util.List;
 
-public class ReversedNaiveSearchStrategy implements INaiveStringSearchStrategy {
+public class ReversedNaiveSearchStrategy implements INaiveInternalStrategy {
 
-    private final INaiveDirectionalSearchStrategy directionalSearchStrategy;
+    private final INaiveInternalDirectionalStrategy directionalSearchStrategy;
 
     public ReversedNaiveSearchStrategy(
-            @NotNull INaiveDirectionalSearchStrategy directionalSearchStrategy
+            @NotNull INaiveInternalDirectionalStrategy directionalSearchStrategy
     ) {
         this.directionalSearchStrategy = directionalSearchStrategy;
     }

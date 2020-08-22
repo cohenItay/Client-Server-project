@@ -1,16 +1,16 @@
 package string_search_algorithms.kmp.strategies;
 
 import com.sun.istack.internal.NotNull;
-import string_search_algorithms.naive.strategies.INaiveStringSearchStrategy;
+import string_search_algorithms.kmp.strategies.directional.IKmpInternalDirectionalStrategy;
 
 import java.util.List;
 
-public class ReversedKmpSearchStrategy implements IKmpStringSearchStrategy {
+public class ReversedKmpSearchStrategy implements IKmpInternalStrategy {
 
-    private final IKmpDirectionalSearchStrategy directionalSearchStrategy;
+    private final IKmpInternalDirectionalStrategy directionalSearchStrategy;
 
     public ReversedKmpSearchStrategy(
-            @NotNull IKmpDirectionalSearchStrategy directionalSearchStrategy
+            @NotNull IKmpInternalDirectionalStrategy directionalSearchStrategy
     ) {
         this.directionalSearchStrategy = directionalSearchStrategy;
     }
