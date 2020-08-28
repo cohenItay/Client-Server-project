@@ -17,20 +17,20 @@ import java.util.logging.Logger;
 public class DaoFileImpl implements IDao {
 
     private final Logger logger = Logger.getLogger(DaoFileImpl.class.getSimpleName());
-    private final @Nullable File file;
+    private @Nullable File file;
+    private String lastUsedFileName;
 
-    /**
-     * @param fileName The file name which must be inside the java Resources directory.
-     */
-    public DaoFileImpl(String fileName) {
-        this.file = createFileFor(fileName);
-    }
+
+    public DaoFileImpl() { }
 
     @Override
-    public String readFileContent() {
+    public String readFileContent(String dataSourceFileName) {
+        if (lastUsedFileName== null || !lastUsedFileName.equalsIgnoreCase(dataSourceFileName) || file == null)
+            file = createFileFor(dataSourceFileName);
         if (file == null)
             return  "";
 
+        lastUsedFileName = dataSourceFileName;
         @NotNull StringBuilder content = new StringBuilder();
         @Nullable String line;
         BufferedReader fileReader = null;

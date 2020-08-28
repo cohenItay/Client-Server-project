@@ -3,6 +3,7 @@ package com.itaycohen.service;
 import com.itaycohen.algorithm.IStringSearchAlgoStrategy;
 import com.itaycohen.dao.DaoFileImpl;
 import com.itaycohen.dao.IDao;
+import com.itaycohen.dm.SearchParams;
 import com.itaycohen.dm.SearchResult;
 import com.sun.istack.internal.NotNull;
 
@@ -10,23 +11,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class SearchService {
+public class SearchService implements ISearchService {
 
-    private static final String FILE_NAME = "datasource.txt";
     private @NotNull IStringSearchAlgoStrategy searchStrategy;
-    private final IDao textRepo;
+    private final IDao repoDao;
 
-    public SearchService(@NotNull IStringSearchAlgoStrategy searchStrategy) {
+    public SearchService(@NotNull IStringSearchAlgoStrategy searchStrategy, IDao repoDao) {
         Objects.requireNonNull(searchStrategy);
         this.searchStrategy = searchStrategy;
-        this.textRepo = new DaoFileImpl(FILE_NAME);
+        this.repoDao = repoDao;
     }
 
-    public SearchResult search(String pattern) {
-        String fileContent = textRepo.readFileContent();
-        List<Integer> occurrencesList = (fileContent.isEmpty() || pattern.isEmpty()) ?
+    @Override
+    public SearchResult search(SearchParams params) {
+        String fileContent = repoDao.readFileContent(params.getDataSourceFileName());
+        List<Integer> occurrencesList = (fileContent.isEmpty() || params.getPattern().isEmpty()) ?
                 new ArrayList<>(0) :
-                searchStrategy.search(pattern, textRepo.readFileContent());
-        return new SearchResult(pattern, occurrencesList);
+                searchStrategy.search(params.getPattern(), repoDao.readFileContent(params.getDataSourceFileName()));
+        return new SearchResult(params, occurrencesList);
     }
 }

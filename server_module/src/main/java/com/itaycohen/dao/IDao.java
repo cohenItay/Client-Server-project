@@ -5,5 +5,8 @@ package com.itaycohen.dao;
  */
 public interface IDao {
 
-    String readFileContent();
+    /**
+     * @param dataSourceFileName The file to search in.
+     */
+    String readFileContent(String dataSourceFileName);
 }

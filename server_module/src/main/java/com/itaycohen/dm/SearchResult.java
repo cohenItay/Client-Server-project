@@ -7,19 +7,19 @@ import java.util.Objects;
 
 public class SearchResult {
 
-    private @NotNull String pattern;
+    private @NotNull SearchParams searchParams;
     private @NotNull List<Integer> patternOccurrences;
 
     public SearchResult(
-            @NotNull String pattern,
+            @NotNull SearchParams searchParams,
             @NotNull List<Integer> patternOccurrences
     ) {
-        this.pattern = pattern;
+        this.searchParams = searchParams;
         this.patternOccurrences = patternOccurrences;
     }
 
-    public String getPattern() {
-        return pattern;
+    public SearchParams getSearchParams() {
+        return searchParams;
     }
 
     public List<Integer> getPatternOccurrences() {
@@ -31,19 +31,19 @@ public class SearchResult {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SearchResult that = (SearchResult) o;
-        return pattern.equals(that.pattern) &&
+        return searchParams.equals(that.searchParams) &&
                 patternOccurrences.equals(that.patternOccurrences);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pattern, patternOccurrences);
+        return Objects.hash(searchParams, patternOccurrences);
     }
 
     @Override
     public String toString() {
         return "SearchResult{" +
-                "pattern='" + pattern + '\'' +
+                "pattern='" + searchParams + '\'' +
                 ", patternOccurrences=" + patternOccurrences +
                 '}';
     }
