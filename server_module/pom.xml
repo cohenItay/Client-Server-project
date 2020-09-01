@@ -23,7 +23,7 @@
             <artifactId>server_module</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/algorithm_module.jar</systemPath>
+            <systemPath>${basedir}/lib/algorithm_module.jar</systemPath>
         </dependency>
     </dependencies>
 
