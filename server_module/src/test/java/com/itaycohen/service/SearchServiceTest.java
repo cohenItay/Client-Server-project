@@ -31,7 +31,7 @@ public class SearchServiceTest {
         IStringSearchAlgoStrategy searchAlg = new StringSearchFactory().create(TYPE_KMP, PROPERTY_ASCENDING);
         SearchService service = new SearchService(searchAlg, new DaoFileImpl());
         SearchResult result = service.search(searchParams);
-        System.out.println("result = "  + result);
+        System.out.println("result   = "  + result);
 
         Assert.assertEquals(result, expected);
     }
