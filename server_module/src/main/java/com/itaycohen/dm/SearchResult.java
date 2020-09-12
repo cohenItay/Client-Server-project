@@ -2,10 +2,11 @@ package com.itaycohen.dm;
 
 import com.sun.istack.internal.NotNull;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class SearchResult {
+public class SearchResult implements Serializable {
 
     private @NotNull SearchParams searchParams;
     private @NotNull List<Integer> patternOccurrences;

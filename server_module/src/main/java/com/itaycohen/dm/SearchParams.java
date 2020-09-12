@@ -2,9 +2,10 @@ package com.itaycohen.dm;
 
 import com.sun.istack.internal.NotNull;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class SearchParams {
+public class SearchParams implements Serializable {
 
     private final String pattern;
     private final String dataSourceFileName;
