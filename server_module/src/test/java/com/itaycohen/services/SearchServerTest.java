@@ -1,12 +1,10 @@
 package com.itaycohen.services;
 
 import com.google.gson.Gson;
-import com.itaycohen.algorithm.IStringSearchAlgoStrategy;
-import com.itaycohen.algorithm.StringSearchFactory;
-import com.itaycohen.dao.DaoFileImpl;
+import com.itaycohen.dm.BookParams;
 import com.itaycohen.dm.SearchParams;
 import com.itaycohen.dm.SearchResult;
-import com.itaycohen.server.IServer;
+import com.itaycohen.server.IHandleRequest;
 import com.itaycohen.server.Server;
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,49 +17,47 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import static com.itaycohen.algorithm.IStringSearchAlgoStrategy.Factory.PROPERTY_ASCENDING;
-import static com.itaycohen.algorithm.IStringSearchAlgoStrategy.Factory.TYPE_KMP;
-
 public class SearchServerTest {
 
     private static final String TEST_PATTERN = "AABA";
     private static final String DATA_SOURCE_FILE_NAME = "dataSource.txt";
+    private static final int PORT = 12345;
     private final Gson gson = new Gson();
 
     @Test
     public void runTest() {
         SearchResult result = null;
-        SearchParams searchParams = new SearchParams(TEST_PATTERN, DATA_SOURCE_FILE_NAME);
+        BookParams searchParams = new BookParams(TEST_PATTERN, DATA_SOURCE_FILE_NAME);
         SearchResult expected = new SearchResult(
                 searchParams,
                 Arrays.asList(0,9,12)
         );
         System.out.println("expected = " + expected);
 
-        Thread serverThread = new Thread(() -> Server.getInstance().run());
-        serverThread.start();
+        Server server = new Server(PORT);
+        server.run();
         try {
             Thread.sleep(500); // Let the serverThread run and start server resources..
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         result = sendServerRequestBlocking(searchParams);
-        Server.getInstance().shutDown();
+        server.shutDown();
 
         System.out.println("result = "  + result);
         Assert.assertEquals(result, expected);
     }
 
-    private SearchResult sendServerRequestBlocking(SearchParams searchParams) {
+    private SearchResult sendServerRequestBlocking(BookParams searchParams) {
         try {
             InetAddress addr = InetAddress.getByName("localhost");
-            Socket clientSocket = new Socket(addr, Server.PORT);
+            Socket clientSocket = new Socket(addr, PORT);
 
             PrintWriter printWriter = new PrintWriter(clientSocket.getOutputStream());
             String outJson = gson.toJson(searchParams);
             printWriter.write(outJson);
             printWriter.write("\n");
-            printWriter.write(IService.CONTENT_END);
+            printWriter.write(IHandleRequest.CONTENT_END);
             printWriter.write("\n");
             printWriter.flush();
 

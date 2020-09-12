@@ -8,18 +8,18 @@ import java.util.Objects;
 
 public class SearchResult implements Serializable {
 
-    private @NotNull SearchParams searchParams;
+    private @NotNull IBookSearchParams searchParams;
     private @NotNull List<Integer> patternOccurrences;
 
     public SearchResult(
-            @NotNull SearchParams searchParams,
-            @NotNull List<Integer> patternOccurrences
+        @NotNull IBookSearchParams searchParams,
+        @NotNull List<Integer> patternOccurrences
     ) {
         this.searchParams = searchParams;
         this.patternOccurrences = patternOccurrences;
     }
 
-    public SearchParams getSearchParams() {
+    public IBookSearchParams getSearchParams() {
         return searchParams;
     }
 
@@ -28,24 +28,28 @@ public class SearchResult implements Serializable {
     }
 
     @Override
+    public String toString() {
+        return "SearchResult{" +
+                "searchParams=" + searchParams.getBookTitle() +
+                " - " +
+                searchParams.getSearchPattern() +
+                " " +
+                ", patternOccurrences=" + patternOccurrences +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SearchResult that = (SearchResult) o;
-        return searchParams.equals(that.searchParams) &&
+        return searchParams.getBookTitle().equals(that.searchParams.getBookTitle()) &&
+                searchParams.getSearchPattern().equals(that.searchParams.getSearchPattern()) &&
                 patternOccurrences.equals(that.patternOccurrences);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(searchParams, patternOccurrences);
-    }
-
-    @Override
-    public String toString() {
-        return "SearchResult{" +
-                "pattern='" + searchParams + '\'' +
-                ", patternOccurrences=" + patternOccurrences +
-                '}';
+        return Objects.hash(searchParams.getBookTitle(), searchParams.getSearchPattern(), patternOccurrences);
     }
 }

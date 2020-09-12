@@ -24,11 +24,11 @@ public class DaoFileImpl implements IDao {
     public DaoFileImpl() { }
 
     @Override
-    public String readFileContent(String dataSourceFileName) {
+    public @Nullable String readFileContent(String dataSourceFileName) {
         if (lastUsedFileName== null || !lastUsedFileName.equalsIgnoreCase(dataSourceFileName) || file == null)
             file = createFileFor(dataSourceFileName);
         if (file == null)
-            return  "";
+            return null;
 
         lastUsedFileName = dataSourceFileName;
         @NotNull StringBuilder content = new StringBuilder();

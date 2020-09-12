@@ -1,24 +1,15 @@
 package com.itaycohen.server;
 
 
-import com.google.gson.Gson;
-import com.itaycohen.algorithm.IStringSearchAlgoStrategy;
-import com.itaycohen.algorithm.StringSearchFactory;
-import com.itaycohen.dao.DaoFileImpl;
-import com.itaycohen.services.IService;
-import com.itaycohen.services.SearchService;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static com.itaycohen.algorithm.IStringSearchAlgoStrategy.Factory.PROPERTY_ASCENDING;
-import static com.itaycohen.algorithm.IStringSearchAlgoStrategy.Factory.TYPE_KMP;
 
 public class Server implements IServer{
 
@@ -26,22 +17,16 @@ public class Server implements IServer{
     private static final int SO_TIMEOUT = 5000;
     private static final int THREAD_POOL_SIZE = 5;
 
-    public  static final int PORT = 12345;
-
     private boolean shouldAcceptClients = false;
     private ServerSocket serverSocket;
     private ExecutorService executor;
-    private final IService service;
+    private Executor serverMainExecutor = Executors.newSingleThreadExecutor();
+    private final IHandleRequest handleRequest;
+    private final int port;
 
-    private Server() {
-        IStringSearchAlgoStrategy searchAlg = new StringSearchFactory().create(TYPE_KMP, PROPERTY_ASCENDING);
-        service = new SearchService(searchAlg, new DaoFileImpl(), new Gson());
-    }
-
-    public static Server getInstance() {
-        if (serverInstance == null)
-            serverInstance = new Server();
-        return serverInstance;
+    public Server(int port, IHandleRequest iHandleRequest) {
+        this.port = port;
+        this.handleRequest = iHandleRequest;
     }
 
     @Override
@@ -57,12 +42,12 @@ public class Server implements IServer{
             executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
 
         try {
-            serverSocket = new ServerSocket(PORT);
+            serverSocket = new ServerSocket(port);
             //serverSocket.setSoTimeout(SO_TIMEOUT);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        acceptClients();
+        serverMainExecutor.execute(this::acceptClients);
     }
 
     /**
@@ -73,7 +58,7 @@ public class Server implements IServer{
             try {
                 final Socket clientSocket = serverSocket.accept();
                 executor.execute(() -> {
-                    service.handleClient(clientSocket);
+                    handleRequest.handleRequest(clientSocket);
                     try {
                         clientSocket.close();
                     } catch (IOException e) {
