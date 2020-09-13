@@ -58,17 +58,18 @@ public class HandleBookRequest implements IHandleRequest {
             Request<BookParams[]> request = gson.fromJson(inJsonBuilder.toString(), type);
             String action = request.getHeader().get(Request.Header.Keys.ACTION);
             Map<String, String> responseHeader = new HashMap<>();
-            responseHeader.put(Response.Header.Keys.RESPONSE_CODE, Response.Header.Values.OK); // start with OK.
+            boolean isOk = false;
             IBook[] books = null;
             switch (action) {
                 case Request.Header.Values.GET:
                     books = controller.onGet(request.getRequestBody());
+                    isOk = books != null;
                     break;
                 case Request.Header.Values.UPDATE:
-                    controller.onUpdate(request.getRequestBody());
+                    isOk = controller.onUpdate(request.getRequestBody());
                     break;
                 case Request.Header.Values.DELETE:
-                    controller.onDelete(request.getRequestBody());
+                    isOk = controller.onDelete(request.getRequestBody());
                     break;
                 default:
                     responseHeader.put(Response.Header.Keys.RESPONSE_CODE, Response.Header.Values.ERROR);
@@ -77,6 +78,12 @@ public class HandleBookRequest implements IHandleRequest {
 
 
             // Return the outcome
+            String state;
+            if (isOk)
+                state = Response.Header.Values.OK;
+            else
+                state = Response.Header.Values.ERROR;
+            responseHeader.put(Response.Header.Keys.RESPONSE_CODE, state);
             Response<IBook[]> response = new Response<>(responseHeader, books);
             printWriter = new PrintWriter(clientSocket.getOutputStream());
             type = new TypeToken<Response<IBook[]>>() {}.getType();

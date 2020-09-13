@@ -4,9 +4,11 @@ import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 
 import java.io.*;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,10 +26,10 @@ public class DaoFileImpl implements IDao {
     public DaoFileImpl() { }
 
     @Override
-    public @Nullable String readFileContent(String dataSourceFileName) {
+    public @Nullable String readFromFile(String dataSourceFileName) {
         if (lastUsedFileName== null || !lastUsedFileName.equalsIgnoreCase(dataSourceFileName) || file == null)
-            file = createFileFor(dataSourceFileName);
-        if (file == null)
+            file = createOrLoadFileFor(dataSourceFileName, false);
+        if (file == null || !file.exists())
             return null;
 
         lastUsedFileName = dataSourceFileName;
@@ -59,14 +61,36 @@ public class DaoFileImpl implements IDao {
         return content.toString();
     }
 
-    private File createFileFor(String fileName) {
-        URL resource = getClass().getResource("/" + fileName);
+    @Override
+    public boolean saveToFile(String fileName, String content) {
+        try {
+            File file = createOrLoadFileFor(fileName, true);
+            if (file == null)
+                return false;
+            FileWriter myWriter = new FileWriter(file);
+            myWriter.write(content == null ? "" : content);
+            myWriter.close();
+            return true;
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Cannot write to file", e);
+            return false;
+        }
+    }
+
+    private File createOrLoadFileFor(String fileName, boolean forceCreate) {
+        String tempFileName = fileName;
+        if (!fileName.endsWith(".txt"))
+            tempFileName += ".txt";
         File file = null;
         try {
-            file = Paths.get(resource.toURI()).toFile();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        };
+            file = new File(System.getProperty("user.dir")+"/src/main/resources/books", tempFileName);
+            if (forceCreate) {
+                if (!file.createNewFile())
+                    logger.log(Level.INFO, "File already exists");
+            }
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Cant create file", e);
+        }
         return file;
     }
 }

@@ -27,12 +27,12 @@ public class BooksController implements IController<IBook[], BookParams[]> {
     }
 
     @Override
-    public void onUpdate(BookParams[] params) {
-
+    public boolean onUpdate(BookParams[] params) {
+        return booksService.saveBooks(params);
     }
 
     @Override
-    public void onDelete(BookParams[] params) {
-
+    public boolean onDelete(BookParams[] params) {
+        return false;
     }
 }

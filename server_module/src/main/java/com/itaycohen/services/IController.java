@@ -8,6 +8,6 @@ package com.itaycohen.services;
 public interface IController<RM, PM> {
 
     RM onGet(PM params);
-    void onUpdate(PM params);
-    void onDelete(PM params);
+    boolean onUpdate(PM params);
+    boolean onDelete(PM params);
 }

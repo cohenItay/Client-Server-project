@@ -40,7 +40,7 @@ public class BooksService implements IBooksService{
     @Override
     public BookWithSearch getBookWithSearch(BookParams param) {
         SearchResult searchResult = null;
-        String bookContent = repoDao.readFileContent(param.getBookTitle());
+        String bookContent = repoDao.readFromFile(param.getBookTitle());
         if (bookContent.isEmpty())
             bookContent = "No such book";
         else
@@ -60,7 +60,7 @@ public class BooksService implements IBooksService{
 
     @Override
     public Book getBook(BookParams param) {
-        String bookContent = repoDao.readFileContent(param.getBookTitle());
+        String bookContent = repoDao.readFromFile(param.getBookTitle());
         if (bookContent.isEmpty())
             bookContent = "No such book";
         return new Book(param.getBookTitle(), bookContent);
@@ -68,8 +68,11 @@ public class BooksService implements IBooksService{
 
 
     @Override
-    public void saveBook(BookParams[] params) {
-
+    public boolean saveBooks(BookParams[] params) {
+        boolean isAllSuccess = true;
+        for (BookParams param : params)
+            isAllSuccess &= repoDao.saveToFile(param.getBookTitle(), param.getContent());
+        return isAllSuccess;
     }
 
     private SearchResult search(String fileContent, BookParams params) {

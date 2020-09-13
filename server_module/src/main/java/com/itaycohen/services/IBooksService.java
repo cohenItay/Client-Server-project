@@ -11,5 +11,11 @@ public interface IBooksService {
     Book[] getBooks(BookParams[] params);
     BookWithSearch getBookWithSearch(BookParams param);
     BookWithSearch[] getBooksWithSearch(BookParams[] params);
-    void saveBook(BookParams[] params);
+
+    /**
+     * saves a book of updating an exisiting book.
+     * @param params required params to save.
+     * @return true if save/update was successful
+     */
+    boolean saveBooks(BookParams[] params);
 }

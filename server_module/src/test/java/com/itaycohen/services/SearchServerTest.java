@@ -37,7 +37,7 @@ import sun.security.krb5.internal.PAData;
 public class SearchServerTest {
 
     private static final String TEST_PATTERN = "AABA";
-    private static final String TEST_BOOK_NAME = "test_book.txt";
+    private static final String TEST_BOOK_NAME = "test_book";
     private static final String TEST_BOOK_CONTENT = "AABAACAADAABAABA";
     private final Gson gson = GsonContainer.getInstance().newBuilder()
             .registerTypeAdapter(IBook.class, new GsonIBookTypeAdapter())
@@ -68,7 +68,8 @@ public class SearchServerTest {
         };
         System.out.println("expected = " + Arrays.toString(expectedBookArr));
 
-        IBook[] result = sendServerRequestBlocking(bookParamsArr, Request.Header.Values.GET);
+        Response<IBook[]> response = sendServerRequestBlocking(bookParamsArr, Request.Header.Values.GET);
+        IBook[] result = response != null ? response.getResponseBody() : null;
 
         System.out.println("result = "  + Arrays.toString(result));
         Assert.assertArrayEquals(expectedBookArr, result);
@@ -94,10 +95,24 @@ public class SearchServerTest {
         };
         System.out.println("expected = " + Arrays.toString(expectedBookArr));
 
-        IBook[] result = sendServerRequestBlocking(bookParamsArr, Request.Header.Values.GET);
+        Response<IBook[]> response = sendServerRequestBlocking(bookParamsArr, Request.Header.Values.GET);
+        IBook[] result = response != null ? response.getResponseBody() : null;
 
         System.out.println("result = "  + Arrays.toString(result));
         Assert.assertArrayEquals(expectedBookArr, result);
+    }
+
+    @Test
+    public void saveBook() {
+        BookParams[] bookParamsArr = new BookParams[] {
+                new BookParams(TEST_BOOK_NAME + "2", null, "Once upon a time..")
+        };
+        Map<String,String> expected = new HashMap<>();
+        expected.put(Response.Header.Keys.RESPONSE_CODE, Response.Header.Values.OK);
+        Response<IBook[]> response = sendServerRequestBlocking(bookParamsArr, Request.Header.Values.UPDATE);
+        Map<String, String> actual = response != null ? response.getHeaders() : null;
+        System.out.println("result = "  + actual);
+        Assert.assertEquals(expected, actual);
     }
 
     @After
@@ -105,7 +120,7 @@ public class SearchServerTest {
         server.shutDown();
     }
 
-    private IBook[] sendServerRequestBlocking(BookParams[] bookParamsArr, String action) {
+    private Response<IBook[]> sendServerRequestBlocking(BookParams[] bookParamsArr, String action) {
         try {
             InetAddress addr = InetAddress.getByName("localhost");
             Socket clientSocket = new Socket(addr, ServerDriver.PORT);
@@ -130,10 +145,7 @@ public class SearchServerTest {
             printWriter.close();
             type = new TypeToken<Response<IBook[]>>() {}.getType();
             Response<IBook[]> response = gson.fromJson(inJsonBuilder.toString(), type);
-            if (response != null)
-                return response.getResponseBody();
-            else
-                return null;
+            return response;
         } catch (UnknownHostException e) {
             System.out.println("TODO: handle UnknownHostException");
             e.printStackTrace();
