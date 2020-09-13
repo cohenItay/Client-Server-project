@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.itaycohen.ServerDriver;
 import com.itaycohen.dm.Book;
 import com.itaycohen.dm.BookParams;
+import com.itaycohen.dm.BookWithSearch;
 import com.itaycohen.dm.IBook;
 import com.itaycohen.dm.SearchParams;
 import com.itaycohen.dm.SearchResult;
@@ -31,6 +32,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+import sun.security.krb5.internal.PAData;
+
 public class SearchServerTest {
 
     private static final String TEST_PATTERN = "AABA";
@@ -51,9 +54,12 @@ public class SearchServerTest {
         }
     }
 
+
+    /**
+     * Fetch a book from the server
+     */
     @Test
     public void getBooks() {
-        IBook[] result = null;
         BookParams[] bookParamsArr = new BookParams[] {
                 new BookParams(TEST_BOOK_NAME)
         };
@@ -62,27 +68,36 @@ public class SearchServerTest {
         };
         System.out.println("expected = " + Arrays.toString(expectedBookArr));
 
-        result = sendServerRequestBlocking(bookParamsArr, Request.Header.Values.GET);
+        IBook[] result = sendServerRequestBlocking(bookParamsArr, Request.Header.Values.GET);
 
         System.out.println("result = "  + Arrays.toString(result));
         Assert.assertArrayEquals(expectedBookArr, result);
     }
 
+    /**
+     * Fetch multipile books from the server,
+     * in some of them search for a pattern in the whole book.
+     */
     @Test
     public void getBooksWithSearch() {
-        /*SearchResult result = null;
-        BookParams searchParams = new BookParams("test_book.txt", TEST_PATTERN);
-        SearchResult expected = new SearchResult(
-                searchParams,
+        BookParams[] bookParamsArr = new BookParams[] {
+                new BookParams(TEST_BOOK_NAME),
+                new BookParams(TEST_BOOK_NAME, TEST_PATTERN)
+        };
+        SearchResult searchResult = new SearchResult(
+                new SearchParams(TEST_BOOK_NAME, TEST_PATTERN),
                 Arrays.asList(0,9,12)
         );
-        System.out.println("expected = " + expected);
+        IBook[] expectedBookArr = new IBook[] {
+                new Book(TEST_BOOK_NAME, TEST_BOOK_CONTENT),
+                new BookWithSearch(TEST_BOOK_NAME, TEST_BOOK_CONTENT, searchResult)
+        };
+        System.out.println("expected = " + Arrays.toString(expectedBookArr));
 
+        IBook[] result = sendServerRequestBlocking(bookParamsArr, Request.Header.Values.GET);
 
-        result = sendServerRequestBlocking(searchParams);
-
-        System.out.println("result = "  + result);
-        Assert.assertEquals(result, expected);*/
+        System.out.println("result = "  + Arrays.toString(result));
+        Assert.assertArrayEquals(expectedBookArr, result);
     }
 
     @After

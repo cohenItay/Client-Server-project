@@ -7,7 +7,9 @@ import com.itaycohen.dm.IBook;
 
 public interface IBooksService {
 
+    Book getBook(BookParams param);
     Book[] getBooks(BookParams[] params);
+    BookWithSearch getBookWithSearch(BookParams param);
     BookWithSearch[] getBooksWithSearch(BookParams[] params);
     void saveBook(BookParams[] params);
 }

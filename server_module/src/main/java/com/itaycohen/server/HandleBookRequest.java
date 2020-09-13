@@ -81,7 +81,6 @@ public class HandleBookRequest implements IHandleRequest {
             printWriter = new PrintWriter(clientSocket.getOutputStream());
             type = new TypeToken<Response<IBook[]>>() {}.getType();
             String outJson = gson.toJson(response, type);
-            System.out.println("service sending output: " + outJson);
             printWriter.write(outJson);
             printWriter.write("\n"); // end of transmission
             printWriter.flush();

@@ -28,33 +28,44 @@ public class BooksService implements IBooksService{
     }
 
     @Override
-    public Book[] getBooks(BookParams[] params) {
-        Book[] books = new Book[params.length];
+    public BookWithSearch[] getBooksWithSearch(BookParams[] params) {
+        BookWithSearch[] books = new BookWithSearch[params.length];
         for (int i=0; i<params.length; i++) {
             BookParams bookParams = params[i];
-            String bookContent = repoDao.readFileContent(bookParams.getBookTitle());
-            if (bookContent.isEmpty())
-                bookContent = "No such book";
-            books[i] = new Book(bookParams.getBookTitle(), bookContent);
+            books[i] = getBookWithSearch(bookParams);
         }
         return books;
     }
 
     @Override
-    public BookWithSearch[] getBooksWithSearch(BookParams[] params) {
-        BookWithSearch[] books = new BookWithSearch[params.length];
+    public BookWithSearch getBookWithSearch(BookParams param) {
+        SearchResult searchResult = null;
+        String bookContent = repoDao.readFileContent(param.getBookTitle());
+        if (bookContent.isEmpty())
+            bookContent = "No such book";
+        else
+            searchResult = search(bookContent, param);
+        return new BookWithSearch(param.getBookTitle(), bookContent, searchResult);
+    }
+
+    @Override
+    public Book[] getBooks(BookParams[] params) {
+        Book[] books = new Book[params.length];
         for (int i=0; i<params.length; i++) {
             BookParams bookParams = params[i];
-            SearchResult searchResult = null;
-            String bookContent = repoDao.readFileContent(bookParams.getBookTitle());
-            if (bookContent.isEmpty())
-                bookContent = "No such book";
-            else
-                searchResult = search(bookContent, bookParams);
-            books[i] = new BookWithSearch(bookParams.getBookTitle(), bookContent, searchResult);
+            books[i] = getBook(bookParams);
         }
         return books;
     }
+
+    @Override
+    public Book getBook(BookParams param) {
+        String bookContent = repoDao.readFileContent(param.getBookTitle());
+        if (bookContent.isEmpty())
+            bookContent = "No such book";
+        return new Book(param.getBookTitle(), bookContent);
+    }
+
 
     @Override
     public void saveBook(BookParams[] params) {
@@ -64,7 +75,7 @@ public class BooksService implements IBooksService{
     private SearchResult search(String fileContent, BookParams params) {
         List<Integer> occurrencesList = (fileContent.isEmpty() || params.getBookTitle().isEmpty()) ?
                 new ArrayList<>(0) :
-                searchStrategy.search(params.getBookTitle(), fileContent);
+                searchStrategy.search(params.getSearchPattern(), fileContent);
         return new SearchResult(new SearchParams(params), occurrencesList);
     }
 }

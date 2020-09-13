@@ -6,8 +6,12 @@ public class SearchParams {
     private final String searchPattern;
 
     public SearchParams(BookParams bookParams) {
-        this.title = bookParams.getBookTitle();
-        this.searchPattern = bookParams.getSearchPattern();
+        this(bookParams.getBookTitle(), bookParams.getSearchPattern());
+    }
+
+    public SearchParams(String title, String searchPattern) {
+        this.title = title;
+        this.searchPattern = searchPattern;
     }
 
     public String getBookTitle() {
