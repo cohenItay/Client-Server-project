@@ -33,6 +33,6 @@ public class BooksController implements IController<IBook[], BookParams[]> {
 
     @Override
     public boolean onDelete(BookParams[] params) {
-        return false;
+        return booksService.deleteBooks(params);
     }
 }

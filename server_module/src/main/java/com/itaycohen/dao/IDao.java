@@ -17,4 +17,11 @@ public interface IDao {
      * @return true if write was successful
      */
     boolean saveToFile(String fileName, String content);
+
+    /**
+     * Deletes a file
+     * @param fileName the desired file to delete.
+     * @return true if the deletion was success.
+     */
+    boolean deleteFile(String fileName);
 }

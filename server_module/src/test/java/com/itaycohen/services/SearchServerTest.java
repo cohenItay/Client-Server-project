@@ -115,6 +115,19 @@ public class SearchServerTest {
         Assert.assertEquals(expected, actual);
     }
 
+    @Test
+    public void deleteBook() {
+        BookParams[] bookParamsArr = new BookParams[] {
+                new BookParams(TEST_BOOK_NAME + "2")
+        };
+        Map<String,String> expected = new HashMap<>();
+        expected.put(Response.Header.Keys.RESPONSE_CODE, Response.Header.Values.OK);
+        Response<IBook[]> response = sendServerRequestBlocking(bookParamsArr, Request.Header.Values.DELETE);
+        Map<String, String> actual = response != null ? response.getHeaders() : null;
+        System.out.println("result = "  + actual);
+        Assert.assertEquals(expected, actual);
+    }
+
     @After
     public void doAfter() {
         server.shutDown();

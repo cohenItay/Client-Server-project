@@ -77,6 +77,12 @@ public class DaoFileImpl implements IDao {
         }
     }
 
+    @Override
+    public boolean deleteFile(String fileName) {
+        File file = createOrLoadFileFor(fileName, false);
+        return file.delete();
+    }
+
     private File createOrLoadFileFor(String fileName, boolean forceCreate) {
         String tempFileName = fileName;
         if (!fileName.endsWith(".txt"))

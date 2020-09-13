@@ -18,4 +18,11 @@ public interface IBooksService {
      * @return true if save/update was successful
      */
     boolean saveBooks(BookParams[] params);
+
+    /**
+     * delete a book.
+     * @param params required params to delete.
+     * @return true if the deletion was successful
+     */
+    boolean deleteBooks(BookParams[] params);
 }

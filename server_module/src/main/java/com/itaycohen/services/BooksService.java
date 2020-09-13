@@ -75,6 +75,14 @@ public class BooksService implements IBooksService{
         return isAllSuccess;
     }
 
+    @Override
+    public boolean deleteBooks(BookParams[] params) {
+        boolean isAllSuccess = true;
+        for (BookParams param : params)
+            isAllSuccess &= repoDao.deleteFile(param.getBookTitle());
+        return isAllSuccess;
+    }
+
     private SearchResult search(String fileContent, BookParams params) {
         List<Integer> occurrencesList = (fileContent.isEmpty() || params.getBookTitle().isEmpty()) ?
                 new ArrayList<>(0) :
