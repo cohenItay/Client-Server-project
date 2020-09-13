@@ -15,8 +15,7 @@ public class BooksController implements IController<IBook[], BookParams[]> {
 
     @Override
     public IBook[] onGet(BookParams[] params) {
-
-        return new IBook[0];
+        return booksService.getBooks(params);
     }
 
     @Override

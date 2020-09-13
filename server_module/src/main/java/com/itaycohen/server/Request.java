@@ -1,11 +1,24 @@
 package com.itaycohen.server;
 
-import java.util.Map;
+import com.sun.istack.internal.Nullable;
 
+import java.util.Map;
+import java.util.Objects;
+
+/**
+ * Request data model to be sent to server
+ * @param <T> the expected request body type
+ */
 public class Request<T> {
 
     private Map<String, String> headers;
     private T requestBody;
+
+    public Request(Map<String, String> header, @Nullable T requestBody) {
+        Objects.requireNonNull(header);
+        this.headers = header;
+        this.requestBody = requestBody;
+    }
 
     public Map<String, String> getHeader() {
         return headers;

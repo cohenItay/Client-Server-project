@@ -9,4 +9,5 @@ public interface IBooksService {
 
     Book[] getBooks(BookParams[] params);
     BookWithSearch[] getBooksWithSearch(BookParams[] params);
+    void saveBook(BookParams[] params);
 }

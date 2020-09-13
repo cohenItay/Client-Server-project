@@ -6,6 +6,7 @@ import com.itaycohen.dao.IDao;
 import com.itaycohen.dm.Book;
 import com.itaycohen.dm.BookParams;
 import com.itaycohen.dm.BookWithSearch;
+import com.itaycohen.dm.SearchParams;
 import com.itaycohen.dm.SearchResult;
 import com.sun.istack.internal.NotNull;
 
@@ -55,10 +56,15 @@ public class BooksService implements IBooksService{
         return books;
     }
 
+    @Override
+    public void saveBook(BookParams[] params) {
+
+    }
+
     private SearchResult search(String fileContent, BookParams params) {
         List<Integer> occurrencesList = (fileContent.isEmpty() || params.getBookTitle().isEmpty()) ?
                 new ArrayList<>(0) :
                 searchStrategy.search(params.getBookTitle(), fileContent);
-        return new SearchResult(params, occurrencesList);
+        return new SearchResult(new SearchParams(params), occurrencesList);
     }
 }

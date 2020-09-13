@@ -8,18 +8,18 @@ import java.util.Objects;
 
 public class SearchResult implements Serializable {
 
-    private @NotNull IBookSearchParams searchParams;
+    private @NotNull SearchParams searchParams;
     private @NotNull List<Integer> patternOccurrences;
 
     public SearchResult(
-        @NotNull IBookSearchParams searchParams,
+        @NotNull SearchParams searchParams,
         @NotNull List<Integer> patternOccurrences
     ) {
         this.searchParams = searchParams;
         this.patternOccurrences = patternOccurrences;
     }
 
-    public IBookSearchParams getSearchParams() {
+    public SearchParams getSearchParams() {
         return searchParams;
     }
 

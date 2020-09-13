@@ -6,7 +6,7 @@ import com.sun.istack.internal.Nullable;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class BookParams implements IBookSearchParams, Serializable {
+public class BookParams implements Serializable {
 
     private final String title;
     private final String searchPattern;
@@ -34,12 +34,10 @@ public class BookParams implements IBookSearchParams, Serializable {
         this.content = content;
     }
 
-    @Override
     public String getBookTitle() {
         return title;
     }
 
-    @Override
     public String getSearchPattern() {
         return searchPattern;
     }

@@ -23,12 +23,18 @@ public class ServerDriver {
     public static final int PORT = 12345;
 
     public static void main(String[] args) {
+        drive();
+    }
+
+    public static Server drive() {
         IStringSearchAlgoStrategy searchAlg = new StringSearchFactory().create(TYPE_KMP, PROPERTY_ASCENDING);
         IDao dao = new DaoFileImpl();
         IBooksService booksService = new BooksService(searchAlg, dao, GsonContainer.getInstance());
         IController<IBook[], BookParams[]> booksController = new BooksController(booksService);
         IHandleRequest handleRequest = new HandleBookRequest(GsonContainer.getInstance(), booksController);
 
-        new Server(PORT, handleRequest).run();
+        Server server = new Server(PORT, handleRequest);
+        server.run();
+        return server;
     }
 }

@@ -16,6 +16,8 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class HandleBookRequest implements IHandleRequest {
 
@@ -77,15 +79,15 @@ public class HandleBookRequest implements IHandleRequest {
             // Return the outcome
             Response<IBook[]> response = new Response<>(responseHeader, books);
             printWriter = new PrintWriter(clientSocket.getOutputStream());
-            String outJson = gson.toJson(response);
+            type = new TypeToken<Response<IBook[]>>() {}.getType();
+            String outJson = gson.toJson(response, type);
             System.out.println("service sending output: " + outJson);
             printWriter.write(outJson);
             printWriter.write("\n"); // end of transmission
             printWriter.flush();
 
         } catch (IOException | JsonSyntaxException e) {
-            System.out.println("TODO: handle IOException | JsonSyntaxException");
-            e.printStackTrace();
+            Logger.getGlobal().log(Level.SEVERE, "TODO: handle IOException | JsonSyntaxException", e);
         } finally {
             // Free resources
             if (scanner != null)
