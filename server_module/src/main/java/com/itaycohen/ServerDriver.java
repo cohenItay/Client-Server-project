@@ -27,6 +27,8 @@ public class ServerDriver {
     }
 
     public static Server drive() {
+
+        // Dependency injection :
         IStringSearchAlgoStrategy searchAlg = new StringSearchFactory().create(TYPE_KMP, PROPERTY_ASCENDING);
         IDao dao = new DaoFileImpl();
         IBooksService booksService = new BooksService(searchAlg, dao, GsonContainer.getInstance());
