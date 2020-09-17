@@ -8,7 +8,6 @@ import com.itaycohen.utils.GsonContainer;
 import com.itaycohen.utils.GsonIBookTypeAdapter;
 import com.sun.istack.internal.NotNull;
 
-import javax.xml.ws.Response;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
@@ -20,7 +19,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 /**
  * The DataSource of which belongs to a Repository (used in Repository-pattern)
@@ -47,25 +45,31 @@ public class LibraryInternetWebService implements IBooksInternetService {
     }
 
     @Override
-    public Future<Response<IBook[]>> getBooks(BookParams[] params) {
-        CompletableFuture<Response<IBook[]>> cf = CompletableFuture.supplyAsync(() ->
+    public CompletableFuture<Response<IBook[]>> getBooks(BookParams[] params) {
+        return CompletableFuture.supplyAsync(() ->
                 sendServerRequestBlocking(params, Request.Header.Values.GET, IBook[].class)
-                ).
+        );
     }
 
     @Override
-    public Future<Response<IBook[]>> getBooksWithSearch(BookParams[] params) {
-        return sendServerRequestBlocking(params, Request.Header.Values.GET, IBook[].class);
+    public CompletableFuture<Response<IBook[]>> getBooksWithSearch(BookParams[] params) {
+        return CompletableFuture.supplyAsync(() ->
+                sendServerRequestBlocking(params, Request.Header.Values.GET, IBook[].class)
+        );
     }
 
     @Override
-    public Future<Response<Void>> saveBook(BookParams[] params) {
-        return sendServerRequestBlocking(params, Request.Header.Values.UPDATE, Void.class);
+    public CompletableFuture<Response<Void>> saveBooks(BookParams[] params) {
+        return CompletableFuture.supplyAsync(() ->
+                sendServerRequestBlocking(params, Request.Header.Values.UPDATE, Void.class)
+        );
     }
 
     @Override
-    public Future<Response<Void>> deleteBook(BookParams[] params) {
-        return sendServerRequestBlocking(params, Request.Header.Values.DELETE, Void.class);
+    public CompletableFuture<Response<Void>> deleteBook(BookParams[] params) {
+        return CompletableFuture.supplyAsync(() ->
+                sendServerRequestBlocking(params, Request.Header.Values.DELETE, Void.class)
+        );
     }
 
     private <T> Response<T> sendServerRequestBlocking(BookParams[] bookParamsArr, String action, Class<T> modelType) {

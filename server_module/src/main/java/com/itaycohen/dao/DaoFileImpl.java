@@ -89,7 +89,7 @@ public class DaoFileImpl implements IDao {
             tempFileName += ".txt";
         File file = null;
         try {
-            file = new File(System.getProperty("user.dir")+"/src/main/resources/books", tempFileName);
+            file = new File(System.getProperty("user.dir")+"/server_module/src/main/resources/books", tempFileName);
             if (forceCreate) {
                 if (!file.createNewFile())
                     logger.log(Level.INFO, "File already exists");
