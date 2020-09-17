@@ -1,9 +1,8 @@
 package com.itaycohen.services;
 
-import com.itaycohen.dm.Book;
-import com.itaycohen.dm.BookParams;
-import com.itaycohen.dm.BookWithSearch;
-import com.itaycohen.dm.IBook;
+import com.itaycohen.data_layer.dm.Book;
+import com.itaycohen.data_layer.dm.BookParams;
+import com.itaycohen.data_layer.dm.BookWithSearch;
 
 public interface IBooksService {
 

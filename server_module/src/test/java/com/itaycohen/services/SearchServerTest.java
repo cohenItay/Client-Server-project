@@ -3,12 +3,12 @@ package com.itaycohen.services;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.itaycohen.ServerDriver;
-import com.itaycohen.dm.Book;
-import com.itaycohen.dm.BookParams;
-import com.itaycohen.dm.BookWithSearch;
-import com.itaycohen.dm.IBook;
-import com.itaycohen.dm.SearchParams;
-import com.itaycohen.dm.SearchResult;
+import com.itaycohen.data_layer.dm.Book;
+import com.itaycohen.data_layer.dm.BookParams;
+import com.itaycohen.data_layer.dm.BookWithSearch;
+import com.itaycohen.data_layer.dm.IBook;
+import com.itaycohen.data_layer.dm.SearchParams;
+import com.itaycohen.data_layer.dm.SearchResult;
 import com.itaycohen.server.IHandleRequest;
 import com.itaycohen.server.Request;
 import com.itaycohen.server.Response;
@@ -31,8 +31,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-
-import sun.security.krb5.internal.PAData;
 
 public class SearchServerTest {
 

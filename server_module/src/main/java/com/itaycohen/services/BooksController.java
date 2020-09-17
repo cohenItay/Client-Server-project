@@ -1,8 +1,8 @@
 package com.itaycohen.services;
 
 
-import com.itaycohen.dm.BookParams;
-import com.itaycohen.dm.IBook;
+import com.itaycohen.data_layer.dm.BookParams;
+import com.itaycohen.data_layer.dm.IBook;
 import com.sun.istack.internal.NotNull;
 
 public class BooksController implements IController<IBook[], BookParams[]> {

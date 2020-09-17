@@ -3,11 +3,11 @@ package com.itaycohen.services;
 import com.google.gson.Gson;
 import com.itaycohen.algorithm.IStringSearchAlgoStrategy;
 import com.itaycohen.dao.IDao;
-import com.itaycohen.dm.Book;
-import com.itaycohen.dm.BookParams;
-import com.itaycohen.dm.BookWithSearch;
-import com.itaycohen.dm.SearchParams;
-import com.itaycohen.dm.SearchResult;
+import com.itaycohen.data_layer.dm.Book;
+import com.itaycohen.data_layer.dm.BookParams;
+import com.itaycohen.data_layer.dm.BookWithSearch;
+import com.itaycohen.data_layer.dm.SearchParams;
+import com.itaycohen.data_layer.dm.SearchResult;
 import com.sun.istack.internal.NotNull;
 
 import java.util.ArrayList;
