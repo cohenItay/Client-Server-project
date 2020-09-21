@@ -4,11 +4,18 @@ import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 
 import java.io.*;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Scanner;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * An implementation for {@link IDao}.
@@ -24,11 +31,11 @@ public class DaoFileImpl implements IDao {
     public DaoFileImpl() { }
 
     @Override
-    public String readFileContent(String dataSourceFileName) {
+    public @Nullable String readFromFile(String parentPath, String dataSourceFileName) {
         if (lastUsedFileName== null || !lastUsedFileName.equalsIgnoreCase(dataSourceFileName) || file == null)
-            file = createFileFor(dataSourceFileName);
-        if (file == null)
-            return  "";
+            file = createOrLoadFileFor(parentPath, dataSourceFileName, false);
+        if (file == null || !file.exists())
+            return null;
 
         lastUsedFileName = dataSourceFileName;
         @NotNull StringBuilder content = new StringBuilder();
@@ -59,14 +66,60 @@ public class DaoFileImpl implements IDao {
         return content.toString();
     }
 
-    private File createFileFor(String fileName) {
-        URL resource = getClass().getResource("/" + fileName);
+    @Override
+    public String[] readAllTextFilesNamesIn(String path) {
+        File file = new File(path);
+        if (!file.isDirectory())
+            return null;
+
+        try (Stream<Path> stream = Files.walk(Paths.get(path), 1)) {
+            return stream
+                    .filter(f -> !Files.isDirectory(f))
+                    .map(Path::getFileName)
+                    .map(Path::toString)
+                    .toArray(String[]::new);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public boolean saveToFile(String parentPath, String fileName, String content) {
+        try {
+            File file = createOrLoadFileFor(parentPath, fileName, true);
+            if (file == null)
+                return false;
+            FileWriter myWriter = new FileWriter(file);
+            myWriter.write(content == null ? "" : content);
+            myWriter.close();
+            return true;
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Cannot write to file", e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteFile(String parentPath, String fileName) {
+        File file = createOrLoadFileFor(parentPath, fileName, false);
+        return file.delete();
+    }
+
+    private File createOrLoadFileFor(String parentPath, String fileName, boolean forceCreate) {
+        String tempFileName = fileName;
+        if (!fileName.endsWith(".txt"))
+            tempFileName += ".txt";
         File file = null;
         try {
-            file = Paths.get(resource.toURI()).toFile();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        };
+            file = new File(parentPath, tempFileName);
+            if (forceCreate) {
+                if (!file.createNewFile())
+                    logger.log(Level.INFO, "File already exists");
+            }
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "Cant create file", e);
+        }
         return file;
     }
 }

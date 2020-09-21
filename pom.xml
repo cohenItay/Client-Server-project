@@ -25,6 +25,7 @@
     <modules>
         <module>algorithm_module</module>
         <module>server_module</module>
+        <module>client_module</module>
     </modules>
 
     <dependencies>
