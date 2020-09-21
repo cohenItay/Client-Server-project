@@ -9,6 +9,7 @@ import com.itaycohen.dm.SearchResult;
 import com.itaycohen.views.DashBoard;
 import com.itaycohen.views.DeleteBookPanel;
 import com.itaycohen.views.MenuPanel;
+import com.itaycohen.views.ReadBookPanel;
 import com.itaycohen.views.UploadBookPanel;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
@@ -51,12 +52,14 @@ public class DigitalLibraryController {
 
 
     private void loadBookContent(@NotNull String bookTitle, @Nullable String searchPattern) {
-        dashBoard.getReadBookPanel().notifyLoading(true);
+        dashBoard.getReadBookPanel().setState(ReadBookPanel.State.LOADING);
         BookParams[] params = new BookParams[1];
         params[0] = searchPattern != null ? new BookParams(bookTitle, searchPattern) : new BookParams(bookTitle);
         CompletableFuture<Response<IBook[]>> completable = repository.requestBooks(params);
         completable.thenAccept(response -> SwingUtilities.invokeLater(() -> {
-            dashBoard.getReadBookPanel().notifyLoading(false);
+            String responseState = response.getHeaders().get(Response.Header.Keys.RESPONSE_CODE);
+            boolean isOK = responseState.equals(Response.Header.Values.OK);
+            dashBoard.getReadBookPanel().setState(isOK ? ReadBookPanel.State.IDLE : ReadBookPanel.State.NO_BOOK);
             displayBook(response);
         }));
     }

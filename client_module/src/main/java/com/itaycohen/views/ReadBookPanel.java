@@ -27,6 +27,7 @@ public class ReadBookPanel extends JPanel {
     private final JCheckBox searchCheckBox = new JCheckBox();
     private final JLabel searchLabel = new JLabel("Search pattern: ");
     private Listener listener;
+    private State currentState = State.IDLE;
 
     public ReadBookPanel() {
         this.setLayout(new GridBagLayout());
@@ -119,8 +120,28 @@ public class ReadBookPanel extends JPanel {
         }
     }
 
-    public void notifyLoading(boolean isLoading) {
-        bookContentTextArea.setText(isLoading ? "Loading..." : "");
+    public void setState(State newState) {
+        String content = bookContentTextArea.getText();
+
+        if (currentState != State.IDLE)
+            content = content.replace(currentState.label, newState.label);
+        else
+            content  = newState.label + content;
+
+        currentState = newState;
+        bookContentTextArea.setText(content);
+    }
+
+    public enum State {
+        LOADING("Loading...\n===========\n\n"),
+        NO_BOOK("No such book\n===========\n\n"),
+        IDLE("");
+
+        public final String label;
+
+        private State(String label) {
+            this.label = label;
+        }
     }
 
     public interface Listener {
