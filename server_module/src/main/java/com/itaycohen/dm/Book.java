@@ -1,15 +1,16 @@
-package com.itaycohen.data_layer.dm;
+package com.itaycohen.dm;
 
 import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 
 import java.util.Objects;
 
 public class Book implements IBook {
 
     private final String title;
-    private String content;
+    private @Nullable String content;
 
-    public Book(@NotNull String title, String content) {
+    public Book(@NotNull String title, @Nullable String content) {
         Objects.requireNonNull(title);
         this.title = title;
         this.content = content;
@@ -21,7 +22,7 @@ public class Book implements IBook {
     }
 
     @Override
-    public String getContent() {
+    public @Nullable String getContent() {
         return content;
     }
 

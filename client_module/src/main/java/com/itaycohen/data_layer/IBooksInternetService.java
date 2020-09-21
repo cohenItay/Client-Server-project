@@ -1,7 +1,7 @@
 package com.itaycohen.data_layer;
 
-import com.itaycohen.data_layer.dm.BookParams;
-import com.itaycohen.data_layer.dm.IBook;
+import com.itaycohen.dm.BookParams;
+import com.itaycohen.dm.IBook;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -13,6 +13,12 @@ public interface IBooksInternetService {
      * @return promise to return a value of {@link IBook} array in the future
      */
     CompletableFuture<Response<IBook[]>> getBooks(BookParams[] params);
+
+    /**
+     * Retrieve all the books (without their content) in the remote library.
+     * @return promise to return a value of {@link IBook} array in the future
+     */
+    CompletableFuture<Response<IBook[]>> peekAllBooks();
 
     /**
      * Retrieve the desired book from internet and perform a search inside those books.

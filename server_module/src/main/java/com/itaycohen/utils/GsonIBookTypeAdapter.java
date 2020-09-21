@@ -1,9 +1,9 @@
 package com.itaycohen.utils;
 
 import com.google.gson.*;
-import com.itaycohen.data_layer.dm.BookWithSearch;
-import com.itaycohen.data_layer.dm.IBook;
-import com.itaycohen.data_layer.dm.Book;
+import com.itaycohen.dm.BookWithSearch;
+import com.itaycohen.dm.IBook;
+import com.itaycohen.dm.Book;
 
 import java.lang.reflect.Type;
 import java.util.Objects;

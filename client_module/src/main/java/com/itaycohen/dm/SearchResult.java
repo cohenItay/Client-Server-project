@@ -1,4 +1,4 @@
-package com.itaycohen.data_layer.dm;
+package com.itaycohen.dm;
 
 import com.sun.istack.internal.NotNull;
 

@@ -1,4 +1,4 @@
-package com.itaycohen.data_layer.dm;
+package com.itaycohen.dm;
 
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
@@ -46,6 +46,9 @@ public class BookParams implements Serializable {
         return content;
     }
 
+    public String getTitle() {
+        return title;
+    }
 
     @Override
     public String toString() {

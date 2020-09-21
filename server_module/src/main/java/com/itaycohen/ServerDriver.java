@@ -4,8 +4,9 @@ import com.itaycohen.algorithm.IStringSearchAlgoStrategy;
 import com.itaycohen.algorithm.StringSearchFactory;
 import com.itaycohen.dao.DaoFileImpl;
 import com.itaycohen.dao.IDao;
-import com.itaycohen.data_layer.dm.BookParams;
-import com.itaycohen.data_layer.dm.IBook;
+import com.itaycohen.dm.BookParams;
+import com.itaycohen.dm.IBook;
+import com.itaycohen.dm.RequestBodyParams;
 import com.itaycohen.server.HandleBookRequest;
 import com.itaycohen.server.IHandleRequest;
 import com.itaycohen.server.Server;
@@ -31,8 +32,8 @@ public class ServerDriver {
         // Dependency injection :
         IStringSearchAlgoStrategy searchAlg = new StringSearchFactory().create(TYPE_KMP, PROPERTY_ASCENDING);
         IDao dao = new DaoFileImpl();
-        IBooksService booksService = new BooksService(searchAlg, dao, GsonContainer.getInstance());
-        IController<IBook[], BookParams[]> booksController = new BooksController(booksService);
+        IBooksService booksService = new BooksService(searchAlg, dao);
+        IController<IBook[], RequestBodyParams> booksController = new BooksController(booksService);
         IHandleRequest handleRequest = new HandleBookRequest(GsonContainer.getInstance(), booksController);
 
         Server server = new Server(PORT, handleRequest);

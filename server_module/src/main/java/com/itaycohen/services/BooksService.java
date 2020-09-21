@@ -3,11 +3,12 @@ package com.itaycohen.services;
 import com.google.gson.Gson;
 import com.itaycohen.algorithm.IStringSearchAlgoStrategy;
 import com.itaycohen.dao.IDao;
-import com.itaycohen.data_layer.dm.Book;
-import com.itaycohen.data_layer.dm.BookParams;
-import com.itaycohen.data_layer.dm.BookWithSearch;
-import com.itaycohen.data_layer.dm.SearchParams;
-import com.itaycohen.data_layer.dm.SearchResult;
+import com.itaycohen.dm.Book;
+import com.itaycohen.dm.BookParams;
+import com.itaycohen.dm.BookWithSearch;
+import com.itaycohen.dm.IBook;
+import com.itaycohen.dm.SearchParams;
+import com.itaycohen.dm.SearchResult;
 import com.sun.istack.internal.NotNull;
 
 import java.util.ArrayList;
@@ -16,15 +17,30 @@ import java.util.Objects;
 
 public class BooksService implements IBooksService{
 
-    private final Gson gson;
     private @NotNull IStringSearchAlgoStrategy searchStrategy;
     private final IDao repoDao;
+    private final String parentPath = System.getProperty("user.dir")+"/server_module/src/main/resources/books";
 
-    public BooksService(@NotNull IStringSearchAlgoStrategy searchStrategy, IDao repoDao, Gson gson) {
+    public BooksService(@NotNull IStringSearchAlgoStrategy searchStrategy, IDao repoDao) {
         Objects.requireNonNull(searchStrategy);
         this.searchStrategy = searchStrategy;
         this.repoDao = repoDao;
-        this.gson = gson;
+    }
+
+
+    @Override
+    public IBook[] peekBooks() {
+        String[] filesNames = repoDao.readAllTextFilesNamesIn(parentPath);
+        if (filesNames == null || filesNames.length < 1)
+            return new IBook[0];
+        else {
+            IBook[] books = new IBook[filesNames.length];
+            for (int i=0; i<filesNames.length; i++) {
+                String name = filesNames[i];
+                books[i] = new Book(name, null);
+            }
+            return books;
+        }
     }
 
     @Override
@@ -40,7 +56,7 @@ public class BooksService implements IBooksService{
     @Override
     public BookWithSearch getBookWithSearch(BookParams param) {
         SearchResult searchResult = null;
-        String bookContent = repoDao.readFromFile(param.getBookTitle());
+        String bookContent = repoDao.readFromFile(parentPath, param.getBookTitle());
         if (bookContent.isEmpty())
             bookContent = "No such book";
         else
@@ -60,7 +76,7 @@ public class BooksService implements IBooksService{
 
     @Override
     public Book getBook(BookParams param) {
-        String bookContent = repoDao.readFromFile(param.getBookTitle());
+        String bookContent = repoDao.readFromFile(parentPath, param.getBookTitle());
         if (bookContent.isEmpty())
             bookContent = "No such book";
         return new Book(param.getBookTitle(), bookContent);
@@ -71,7 +87,7 @@ public class BooksService implements IBooksService{
     public boolean saveBooks(BookParams[] params) {
         boolean isAllSuccess = true;
         for (BookParams param : params)
-            isAllSuccess &= repoDao.saveToFile(param.getBookTitle(), param.getContent());
+            isAllSuccess &= repoDao.saveToFile(parentPath, param.getBookTitle(), param.getContent());
         return isAllSuccess;
     }
 
@@ -79,7 +95,7 @@ public class BooksService implements IBooksService{
     public boolean deleteBooks(BookParams[] params) {
         boolean isAllSuccess = true;
         for (BookParams param : params)
-            isAllSuccess &= repoDao.deleteFile(param.getBookTitle());
+            isAllSuccess &= repoDao.deleteFile(parentPath, param.getBookTitle());
         return isAllSuccess;
     }
 

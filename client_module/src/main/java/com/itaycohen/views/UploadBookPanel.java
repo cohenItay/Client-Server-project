@@ -15,6 +15,7 @@ public class UploadBookPanel extends JPanel {
     private final JTextField bookTitleTextField = new JTextField(10);
     private final JTextArea bookContentTextArea = new JTextArea();
     private Listener listener;
+    private State currentState = State.IDLE;
 
     public UploadBookPanel() {
         this.setLayout(new GridBagLayout());
@@ -65,6 +66,31 @@ public class UploadBookPanel extends JPanel {
 
     public void setListener(Listener listener) {
         this.listener = listener;
+    }
+
+    public void setState(State newState) {
+        String content = bookContentTextArea.getText();
+
+        if (currentState != State.IDLE)
+            content = content.replace(currentState.label, newState.label);
+        else
+            content  = newState.label + content;
+
+        currentState = newState;
+        bookContentTextArea.setText(content);
+    }
+
+    public enum State {
+        UPLOADING("Uploading...\n===========\n\n"),
+        SAVED("Saved\n===========\n\n"),
+        ERROR("Error\n===========\n\n"),
+        IDLE("");
+
+        public final String label;
+
+        private State(String label) {
+            this.label = label;
+        }
     }
 
     public interface Listener {

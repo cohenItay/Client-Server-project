@@ -3,8 +3,9 @@ package com.itaycohen.server;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.itaycohen.data_layer.dm.BookParams;
-import com.itaycohen.data_layer.dm.IBook;
+import com.itaycohen.dm.BookParams;
+import com.itaycohen.dm.IBook;
+import com.itaycohen.dm.RequestBodyParams;
 import com.itaycohen.services.IController;
 import com.itaycohen.utils.GsonIBookTypeAdapter;
 
@@ -21,11 +22,11 @@ import java.util.logging.Logger;
 public class HandleBookRequest implements IHandleRequest {
 
     private final Gson gson;
-    private final IController<IBook[], BookParams[]> controller;
+    private final IController<IBook[], RequestBodyParams> controller;
 
     public HandleBookRequest(
             Gson gson,
-            IController<IBook[], BookParams[]> controller
+            IController<IBook[], RequestBodyParams> controller
     ) {
         this.gson = gson.newBuilder()
                 .registerTypeAdapter(IBook.class, new GsonIBookTypeAdapter())
@@ -53,8 +54,8 @@ public class HandleBookRequest implements IHandleRequest {
             }
 
             // Business logic:
-            Type type = new TypeToken<Request<BookParams[]>>() {}.getType();
-            Request<BookParams[]> request = gson.fromJson(inJsonBuilder.toString(), type);
+            Type type = new TypeToken<Request<RequestBodyParams>>() {}.getType();
+            Request<RequestBodyParams> request = gson.fromJson(inJsonBuilder.toString(), type);
             String action = request.getHeader().get(Request.Header.Keys.ACTION);
             Map<String, String> responseHeader = new HashMap<>();
             boolean isOk = false;

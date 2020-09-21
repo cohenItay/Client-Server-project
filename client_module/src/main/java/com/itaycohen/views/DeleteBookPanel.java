@@ -7,12 +7,14 @@ import java.awt.GridBagLayout;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
 public class DeleteBookPanel extends JPanel {
 
     private final JList<String> booksJList = new JList<>();
+    private final JLabel stateLabel = new JLabel("");
     private Listener listener;
 
     public DeleteBookPanel() {
@@ -22,6 +24,7 @@ public class DeleteBookPanel extends JPanel {
 
         /* First Column */
         gbc.gridx = 0;
+        gbc.gridheight = 2;
         gbc.weighty = 1;
         gbc.weightx = 5;
         gbc.fill = GridBagConstraints.BOTH;
@@ -30,8 +33,10 @@ public class DeleteBookPanel extends JPanel {
 
         /* Second Column */
         gbc.gridx = 1;
+        gbc.gridheight = 1;
         gbc.weightx = 1;
         gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.SOUTH;
         JButton deleteBtn = new JButton("Delete");
         deleteBtn.addActionListener(e -> {
             String bookName = booksJList.getSelectedValue();
@@ -39,6 +44,10 @@ public class DeleteBookPanel extends JPanel {
                 listener.onDelete(bookName);
         });
         this.add(deleteBtn, gbc);
+
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.NORTH;
+        this.add(stateLabel, gbc);
 
     }
 
@@ -48,6 +57,23 @@ public class DeleteBookPanel extends JPanel {
 
     public void setListModel(DefaultListModel<String> model) {
         booksJList.setModel(model);
+    }
+
+    public void setState(State newState) {
+        stateLabel.setText(newState.label);
+    }
+
+    public enum State {
+        DELETING("Deleting..."),
+        DELETED("Deleted"),
+        ERROR("Error"),
+        IDLE("");
+
+        public final String label;
+
+        private State(String label) {
+            this.label = label;
+        }
     }
 
     public interface Listener {

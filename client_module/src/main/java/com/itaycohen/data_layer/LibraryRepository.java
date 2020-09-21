@@ -1,7 +1,7 @@
 package com.itaycohen.data_layer;
 
-import com.itaycohen.data_layer.dm.BookParams;
-import com.itaycohen.data_layer.dm.IBook;
+import com.itaycohen.dm.BookParams;
+import com.itaycohen.dm.IBook;
 import com.sun.istack.internal.NotNull;
 
 import java.util.Objects;
@@ -21,6 +21,11 @@ public class LibraryRepository implements RemoteLibraryRepository {
     @Override
     public CompletableFuture<Response<IBook[]>> requestBooks(BookParams[] params) {
         return internetService.getBooks(params);
+    }
+
+    @Override
+    public CompletableFuture<Response<IBook[]>> peekAllBooks() {
+        return internetService.peekAllBooks();
     }
 
     @Override

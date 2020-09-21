@@ -1,11 +1,13 @@
 package com.itaycohen.services;
 
 
-import com.itaycohen.data_layer.dm.BookParams;
-import com.itaycohen.data_layer.dm.IBook;
+import com.itaycohen.dm.BookParams;
+import com.itaycohen.dm.IBook;
+import com.itaycohen.dm.RequestBodyParams;
 import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 
-public class BooksController implements IController<IBook[], BookParams[]> {
+public class BooksController implements IController<IBook[], RequestBodyParams> {
 
     private final @NotNull IBooksService booksService;
 
@@ -14,25 +16,31 @@ public class BooksController implements IController<IBook[], BookParams[]> {
     }
 
     @Override
-    public IBook[] onGet(BookParams[] params) {
-        IBook[] books = new IBook[params.length];
-        for(int i=0; i<params.length; i++) {
-            BookParams param = params[i];
-            if (param.getSearchPattern() != null && !param.getSearchPattern().isEmpty())
-                books[i] = booksService.getBookWithSearch(param);
-            else
-                books[i] = booksService.getBook(param);
+    public IBook[] onGet(RequestBodyParams bodyParams) {
+        IBook[] books = null;
+        if (bodyParams.isPeek()) {
+            books = booksService.peekBooks();
+        } else if (!bodyParams.isPeek() && bodyParams.getBookParams() != null && bodyParams.getBookParams().length > 0) {
+            BookParams[] bookParams = bodyParams.getBookParams();
+            books = new IBook[bookParams.length];
+            for (int i = 0; i < bookParams.length; i++) {
+                BookParams param = bookParams[i];
+                if (param.getSearchPattern() != null && !param.getSearchPattern().isEmpty())
+                    books[i] = booksService.getBookWithSearch(param);
+                else
+                    books[i] = booksService.getBook(param);
+            }
         }
         return books;
     }
 
     @Override
-    public boolean onUpdate(BookParams[] params) {
-        return booksService.saveBooks(params);
+    public boolean onUpdate(RequestBodyParams bodyParams) {
+        return booksService.saveBooks(bodyParams.getBookParams());
     }
 
     @Override
-    public boolean onDelete(BookParams[] params) {
-        return booksService.deleteBooks(params);
+    public boolean onDelete(RequestBodyParams bodyParams) {
+        return booksService.deleteBooks(bodyParams.getBookParams());
     }
 }

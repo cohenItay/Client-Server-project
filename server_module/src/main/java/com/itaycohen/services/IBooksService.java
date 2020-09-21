@@ -1,8 +1,9 @@
 package com.itaycohen.services;
 
-import com.itaycohen.data_layer.dm.Book;
-import com.itaycohen.data_layer.dm.BookParams;
-import com.itaycohen.data_layer.dm.BookWithSearch;
+import com.itaycohen.dm.Book;
+import com.itaycohen.dm.BookParams;
+import com.itaycohen.dm.BookWithSearch;
+import com.itaycohen.dm.IBook;
 
 public interface IBooksService {
 
@@ -24,4 +25,9 @@ public interface IBooksService {
      * @return true if the deletion was successful
      */
     boolean deleteBooks(BookParams[] params);
+
+    /**
+     * @return list of all books exists in database (without their contents)
+     */
+    IBook[] peekBooks();
 }

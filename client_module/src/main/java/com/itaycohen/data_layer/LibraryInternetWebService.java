@@ -2,8 +2,9 @@ package com.itaycohen.data_layer;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.itaycohen.data_layer.dm.BookParams;
-import com.itaycohen.data_layer.dm.IBook;
+import com.itaycohen.dm.BookParams;
+import com.itaycohen.dm.IBook;
+import com.itaycohen.dm.Params;
 import com.itaycohen.utils.GsonContainer;
 import com.itaycohen.utils.GsonIBookTypeAdapter;
 import com.sun.istack.internal.NotNull;
@@ -45,34 +46,42 @@ public class LibraryInternetWebService implements IBooksInternetService {
     }
 
     @Override
-    public CompletableFuture<Response<IBook[]>> getBooks(BookParams[] params) {
+    public CompletableFuture<Response<IBook[]>> getBooks(BookParams[] bookParams) {
         return CompletableFuture.supplyAsync(() ->
-                sendServerRequestBlocking(params, Request.Header.Values.GET, IBook[].class)
+                sendServerRequestBlocking(new Params(bookParams, false), Request.Header.Values.GET, IBook[].class)
         );
     }
 
     @Override
-    public CompletableFuture<Response<IBook[]>> getBooksWithSearch(BookParams[] params) {
+    public CompletableFuture<Response<IBook[]>> peekAllBooks() {
         return CompletableFuture.supplyAsync(() ->
-                sendServerRequestBlocking(params, Request.Header.Values.GET, IBook[].class)
+                sendServerRequestBlocking(new Params(null, true), Request.Header.Values.GET, IBook[].class)
         );
     }
 
     @Override
-    public CompletableFuture<Response<Void>> saveBooks(BookParams[] params) {
+    public CompletableFuture<Response<IBook[]>> getBooksWithSearch(BookParams[] bookParams) {
         return CompletableFuture.supplyAsync(() ->
-                sendServerRequestBlocking(params, Request.Header.Values.UPDATE, Void.class)
+                sendServerRequestBlocking(new Params(bookParams, false), Request.Header.Values.GET, IBook[].class)
         );
     }
 
     @Override
-    public CompletableFuture<Response<Void>> deleteBook(BookParams[] params) {
+    public CompletableFuture<Response<Void>> saveBooks(BookParams[] bookParams) {
         return CompletableFuture.supplyAsync(() ->
-                sendServerRequestBlocking(params, Request.Header.Values.DELETE, Void.class)
+                sendServerRequestBlocking(new Params(bookParams, false), Request.Header.Values.UPDATE, Void.class)
         );
     }
 
-    private <T> Response<T> sendServerRequestBlocking(BookParams[] bookParamsArr, String action, Class<T> modelType) {
+    @Override
+    public CompletableFuture<Response<Void>> deleteBook(BookParams[] bookParams) {
+        return CompletableFuture.supplyAsync(() ->
+                sendServerRequestBlocking(new Params(bookParams, false), Request.Header.Values.DELETE, Void.class)
+        );
+    }
+
+    private <T> Response<T> sendServerRequestBlocking(@NotNull Params params, String action, Class<T> modelType) {
+        Objects.requireNonNull(params);
         try {
             InetAddress addr = InetAddress.getByName(host);
             Socket clientSocket = new Socket(addr, serverPort);
@@ -80,8 +89,8 @@ public class LibraryInternetWebService implements IBooksInternetService {
             PrintWriter printWriter = new PrintWriter(clientSocket.getOutputStream());
             Map<String, String> headers = new HashMap<>();
             headers.put(Request.Header.Keys.ACTION, action);
-            Request<BookParams[]> request = new Request<>(headers, bookParamsArr);
-            Type type = new TypeToken<Request<BookParams[]>>() {}.getType();
+            Request<Params> request = new Request<>(headers, params);
+            Type type = new TypeToken<Request<Params>>() {}.getType();
             String outJson = gson.toJson(request, type);
             printWriter.write(outJson);
             printWriter.write("\n");
@@ -95,7 +104,7 @@ public class LibraryInternetWebService implements IBooksInternetService {
                 inJsonBuilder.append(scanner.nextLine());
 
             printWriter.close();
-            type = new TypeToken<Response<T>>() {}.getType();
+            type = TypeToken.getParameterized(Response.class, modelType).getType();
             return gson.fromJson(inJsonBuilder.toString(), type);
         } catch (UnknownHostException e) {
             System.out.println("TODO: handle UnknownHostException");
