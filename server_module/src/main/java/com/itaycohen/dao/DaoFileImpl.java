@@ -31,7 +31,7 @@ public class DaoFileImpl implements IDao {
     public DaoFileImpl() { }
 
     @Override
-    public @Nullable String readFromFile(String parentPath, String dataSourceFileName) {
+    public synchronized @Nullable String readFromFile(String parentPath, String dataSourceFileName) {
         if (lastUsedFileName== null || !lastUsedFileName.equalsIgnoreCase(dataSourceFileName) || file == null)
             file = createOrLoadFileFor(parentPath, dataSourceFileName, false);
         if (file == null || !file.exists())
@@ -67,7 +67,7 @@ public class DaoFileImpl implements IDao {
     }
 
     @Override
-    public String[] readAllTextFilesNamesIn(String path) {
+    public synchronized String[] readAllTextFilesNamesIn(String path) {
         File file = new File(path);
         if (!file.isDirectory())
             return null;
@@ -85,7 +85,7 @@ public class DaoFileImpl implements IDao {
     }
 
     @Override
-    public boolean saveToFile(String parentPath, String fileName, String content) {
+    public synchronized boolean saveToFile(String parentPath, String fileName, String content) {
         try {
             File file = createOrLoadFileFor(parentPath, fileName, true);
             if (file == null)
@@ -101,7 +101,7 @@ public class DaoFileImpl implements IDao {
     }
 
     @Override
-    public boolean deleteFile(String parentPath, String fileName) {
+    public synchronized boolean deleteFile(String parentPath, String fileName) {
         File file = createOrLoadFileFor(parentPath, fileName, false);
         return file.delete();
     }
