@@ -52,6 +52,9 @@ public class DigitalLibraryController {
 
 
     private void loadBookContent(@NotNull String bookTitle, @Nullable String searchPattern) {
+        if (bookTitle.isEmpty())
+            return;
+
         dashBoard.getReadBookPanel().setState(ReadBookPanel.State.LOADING);
         BookParams[] params = new BookParams[1];
         params[0] = searchPattern != null ? new BookParams(bookTitle, searchPattern) : new BookParams(bookTitle);
